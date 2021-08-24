@@ -1,5 +1,5 @@
 const { user } = require("../../models");
-const getHashedPassword = require('./getHashedPassword');
+const getHashedPassword = require("./getHashedPassword");
 
 module.exports = {
   post: async (req, res) => {
@@ -13,22 +13,23 @@ module.exports = {
         const foundUser = await user.findOne({
           where: {
             email: email,
-            password: hashedPassword
-          }
-        })
+            password: hashedPassword,
+          },
+        });
 
-        if (!foundUser) return res.status(404).send("조회된 사용자 정보가 없습니다.");
+        if (!foundUser)
+          return res.status(404).send("조회된 사용자 정보가 없습니다.");
 
-        req.session.save(function () { // 세션 스토어에 저장!
+        // 세션 스토어에 저장!
+        req.session.save(function () {
           req.session.userId = foundUser.id;
           res.status(200).send({
-            id: foundUser.id
-          })
+            id: foundUser.id,
+          });
         });
       } catch (e) {
         res.status(404).send(e);
       }
     });
-  } 
-}
-
+  },
+};
