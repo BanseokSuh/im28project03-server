@@ -1,3 +1,3 @@
 module.exports = {
-  accessToken: require('./accessToken'),
+  accessToken: require("./accessToken"),
 };

@@ -1,43 +1,45 @@
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 const { content } = require("../../models");
 
 module.exports = {
   post: async (req, res) => {
-    let { weather, month } = req.body
+    let { weather, month } = req.body;
 
     let foundData;
 
     if (weather) {
-      foundData = await content.findAll({
-        where: {
-          weather: weather
-        },
-        // plain: true
-      }).catch(err => res.json(err))
+      foundData = await content
+        .findAll({
+          where: {
+            weather: weather,
+          },
+          // plain: true
+        })
+        .catch((err) => res.json(err));
     } else if (month) {
-      foundData = await content.findAll({
-        where: {
-          month: month
-        },
-      }).catch(err => res.json(err))
+      foundData = await content
+        .findAll({
+          where: {
+            month: month,
+          },
+        })
+        .catch((err) => res.json(err));
     }
 
     if (!foundData) {
       res.send("찾는 데이터가 없습니다.");
     }
-    
+
     // 데이터 깔끔하게
-    let arrangedData = foundData.map(el => el.get({ plain: true }))
-    
-    let result = arrangedData[Math.floor(Math.random() * arrangedData.length)]
+    let arrangedData = foundData.map((el) => el.get({ plain: true }));
 
-
+    let result = arrangedData[Math.floor(Math.random() * arrangedData.length)];
 
     // // 계절, 월, 위치 데이터 배열
     // let weatherResults = [];
     // let monthResults = [];
     // let locationResults = [];
-    
+
     // // 각 배열에 할당
     // for (let el of arrangedData) {
     //   if (el.weather === weather) {
@@ -60,5 +62,5 @@ module.exports = {
     // let result = [weatherData, monthData, locationData];
 
     res.status(200).send(result);
-  }
-}
+  },
+};
