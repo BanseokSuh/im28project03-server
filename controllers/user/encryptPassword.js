@@ -3,20 +3,22 @@ const { user } = require("../../models");
 
 // 비밀번호 암호화
 module.exports = encryptPassword = async (unhashedPassword) => {
-  let encrypted = await createHashedPassword(unhashedPassword);
-  return encrypted;
+  let encryptedPasswordAndSalt = await hashPassword(unhashedPassword);
+  return encryptedPasswordAndSalt;
 };
 
 // 비밀번호 해싱하기
-const createHashedPassword = (unhashedPassword) => {
+const hashPassword = (unhashedPassword) => {
   return new Promise(async (res, rej) => {
-    // salt
     const salt = await createSalt();
     // 암호화 되지 않은 비밀번호와 salt값을 이용해 sha512로 hashing
+    // 비밀번호, salt, 반복횟수, 비밀번호길이, 해시알고리즘, 콜백
     crypto.pbkdf2(unhashedPassword, salt, 17598, 64, "sha512", (err, key) => {
-      // 비밀번호, salt, 반복횟수, 비밀번호 길이, 해시 알고리즘, 콜백
       if (err) rej(err);
-      res({ password: key.toString("base64"), salt }); // base64 문자열 salt로 변경
+      res({
+        password: key.toString("base64"), // base64 문자열 salt로 변경
+        salt,
+      });
     });
   });
 };

@@ -8,7 +8,7 @@ module.exports = getHashedPassword = async (email, unhashedPassword) => {
       const salt = await user
         .findOne({
           attributes: ["salt"],
-          raw: true, //
+          raw: true,
           where: {
             email: email,
           },

@@ -4,14 +4,15 @@ const encryptPassword = require("./encryptPassword");
 module.exports = {
   post: async (req, res) => {
     let { email, password, username } = req.body;
-    // 비밀번호 암호화
-    let encrypted = await encryptPassword(password);
+    let encryptedPasswordAndSalt = await encryptPassword(password);
     let [result, created] = await user.findOrCreate({
-      where: { email: email },
+      where: {
+        email: email,
+      },
       defaults: {
         username: username,
-        password: encrypted.password,
-        salt: encrypted.salt,
+        password: encryptedPasswordAndSalt.password,
+        salt: encryptedPasswordAndSalt.salt,
       },
     });
 
